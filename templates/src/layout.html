@@ -1,0 +1,18 @@
+{% extends "src/base.html" %}
+
+{% block layout %}
+    {% include 'src/includes/header.html' %}
+
+    <main id="sections" class="outline-none">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'src/includes/footer.html' %}
+
+    {% include 'src/includes/alerts.html' %}
+    {% include 'src/includes/drawer.html' %}
+    {% include 'src/includes/modals.html' %}
+    {% include 'src/includes/bottom_nav.html' %}
+
+    {% block extra_content %}{% endblock %}
+{% endblock %}

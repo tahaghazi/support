@@ -1,0 +1,63 @@
+{% spaceless %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="font-circular scroll-smooth">
+    <head>
+        <title>{% block title %}{{ shop_settings.general_shop_settings.title }}{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        {# SEO #}
+        {% block seo_tags %}
+        <meta name="author" content="{% if author %}{{ author }}{% else %}{{ shop_settings.general_shop_settings.title }}{% endif %}" />
+        <meta name="robots" content="index, follow" />
+        <meta name="copyright" content="Copyright {% now 'Y' %}" />
+        <meta name="created" content="{% now 'jS M Y h:i' %}" />
+        <meta name="language" content="Arabic" />
+        <meta name="keywords" content="{% if keywords %}{{ keywords }}{% else %}{{ shop_settings.general_shop_settings.keywords }}{% endif %}" />
+        <meta name="description" content="{% if content %}{{ content }}{% else %}{{ shop_settings.general_shop_settings.content }}{% endif %}" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="{% if content %}{{ content }}{% else %}{{ shop_settings.general_shop_settings.content }}{% endif %}" />
+        <meta property="og:description" content="{% if content %}{{ content }}{% else %}{{ shop_settings.general_shop_settings.content }}{% endif %}" />
+        <meta property="og:locale" content="ar" />
+        <meta property="og:locale:alternate" content="ar" />
+        <meta property="og:url" content="{{ shop_settings.general_shop_settings.shop_url }}"/>
+        <meta property="og:title" content="{% if title %}{{ title }}{% else %}{{ shop_settings.general_shop_settings.title }}{% endif %}" />
+        <meta property="og:image" content="{{ shop_settings.general_shop_settings.shop_url }}{{ shop_settings.general_shop_settings.logo.url }}" />
+        <meta property="og:image:width" content="256" />
+        <meta property="og:image:height" content="256" />
+        <meta name="twitter:image" content="{{ shop_settings.general_shop_settings.shop_url }}{{ shop_settings.general_shop_settings.logo.url }}" />
+        <meta name="facebook:description" content="{% if content %}{{ content }}{% else %}{{ shop_settings.general_shop_settings.content }}{% endif %}" />
+        <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+        {% endblock %}
+        {# Manifest #}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#001540" />
+        <meta name="msapplication-config" content="{% static 'src/img/browserconfig.xml' %}" />
+        <meta name="theme-color" content="#001540" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'src/img/apple-touch-icon.png' %}" />
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'src/img/favicon-32x32.png' %}" />
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'src/img/favicon-16x16.png' %}" />
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'src/img/favicon.ico' %}" />
+        <link rel="mask-icon" href="{% static 'src/img/safari-pinned-tab.svg' %}" color="#111827" />
+        <link rel="manifest" href="{#{% url 'pwa:manifest' %}#}" />
+        {# Fonts & Stylesheet #}
+        <link rel="stylesheet" href="{% static 'src/assets/bundle.css' %}" />
+        {# <link rel="stylesheet" href="{% static 'src/dist/animate.min.css' %}" /> #}
+        <link rel="prefetch" as="style" onload="this.rel='stylesheet'" href="{% static 'src/fonts.css' %}" />
+        {# Google & Scripts #}
+        <script defer src="{% static 'src/assets/bundle.min.js' %}"></script>
+        {{ shop_settings.general_shop_settings.extra_head_script|safe }}
+    </head>
+    <body class="{% block wrapper_css %}bg-white{% endblock %} flex flex-col min-h-screen outline-none" up-main>
+
+        {% block layout %}{% endblock %}
+
+        {% if user.is_authenticated %}
+            {{ user.username|json_script:"json-username" }}
+        {% endif %}
+
+        {# Scripts #}
+        {{ shop_settings.general_shop_settings.extra_body_script|safe }}
+    </body>
+</html>
+{% endspaceless %}

@@ -1,0 +1,267 @@
+{% extends 'src/layout.html' %}
+
+
+{% block title %}تذكره #{{ ticket.id|slice:8 }} - مركز الدعم - {{ block.super }}{% endblock %}
+
+{% block content %}
+	{# Hero sections #}
+	<section id="tabs" class="bg-primary lg:p-8 lg:pb-16">
+		<div class="max-w-[1440px] mx-auto lg:border-2 border-secondary flex flex-col items-center md:px-8 px-6 py-16 rounded-xl text-center w-full   ">
+			<h1 class="font-medium leading-relaxed px-2 text-2xl text-secondary" data-aos="fade-down">تذكره #{{ ticket.id|slice:8 }}</h1>
+			<h2 class="max-w-prose pt-6 space-x-2 space-x-reverse text-slate-300" data-aos="fade-up">
+				<a href="{#{% url 'home' %}#}" class="text-slate-100">الرئيسيه</a>
+				<span>&rsaquo;</span>
+				<a href="{#{% url 'help:help-center' %}#}" class="text-slate-100">مركز الدعم</a>
+				<span>&rsaquo;</span>
+				<span>تذكره #{{ ticket.id|slice:8 }}</span>
+			</h2>
+		</div>
+	</section>
+
+	<div class="max-w-[1440px] mx-auto bg-white flex flex-col items-center justify-center md:px-8 px-6 py-16 md:py-24 tabs-container w-full">
+		<div class="bg-primary flex items-center p-1 rounded-lg space-x-2 space-x-reverse tabs-header" data-aos="fade-up">
+			<button id="discuss-button" class="bg-secondary default-tab focus:outline-none font-medium px-4 py-3 rounded-lg shadow-sm text-[13px] text-primary">مناقشة</button>
+			<button class="focus:outline-none font-medium px-4 py-3 text-slate-100 text-[13px]">التفاصيل</button>
+		</div>
+		<div
+			class="max-w-screen-md mx-auto pt-12 tabs-content w-full">
+			{# Discussion section #}
+			<div
+				{% if ticket.need_help %} id="discuss-section" {% endif %} class="bg-slate-100 mx-auto rounded-xl w-full" data-aos="fade-up">
+				{# Messages section #}
+				<div class="max-h-[500px] overflow-y-auto px-5 py-5 space-y-6 is-scroll">
+					<div class="space-y-4" dir="ltr">
+						<div class="flex items-start space-x-3">
+							<a href="#" class="flex items-center flex-shrink-0" title="بوت">
+								<img src="{{ shop_settings.general_shop_settings.default_user_image.url }}" class="aspect-square bg-white h-10 rounded-full shadow-sm w-10" alt="صورة المستخدم">
+							</a>
+							<div class="max-w-md space-y-2">
+								<p class="bg-white leading-relaxed px-4 py-3 rounded-xl rounded-tl-none shadow-sm text-slate-700 text-[15px] text-right w-fit">أرسل لنا رسالة مفصلة أدناه سيتم الرد في اقرب وقت</p>
+							</div>
+						</div>
+					</div>
+					{% for date in message_dates %}
+						<input hidden value="{{ date }}">
+						{% if chat_messages|count_by_date:date %}
+							<div class="space-y-4">
+								<div class="relative">
+									<div class="absolute inset-0 flex items-center" aria-hidden="true">
+										<div class="w-full border-t"></div>
+									</div>
+									<div class="relative flex justify-center">
+										<span class="bg-slate-100 px-2 text-slate-500 text-sm">{{ date }}</span>
+									</div>
+								</div>
+							</div>
+
+							{% for message in chat_messages|filter_by_date:date  %}
+								{% if not message.last_message.user == message.user %}
+									<div class="space-y-4" {% if not request.user == message.user %} dir="ltr" {% endif %}>
+										<div class="flex items-start space-x-3 {% if request.user == message.user %}space-x-reverse{% endif %}">
+											<a href="#" class="flex items-center flex-shrink-0" title="{{ message.user.get_short_name}}"><img src="{{message.user.image.url}}" class="aspect-square bg-white h-10 rounded-full shadow-sm w-10" alt="صورة المستخدم"></a>
+											<div class="max-w-md space-y-2">
+												<div id="message-{{ message.id }}" class="space-y-2 w-fit">
+													<p class="{% if request.user == message.user %}bg-sky-100{% else %}bg-white{% endif %} leading-relaxed px-4 py-3 rounded-xl {% if request.user == message.user %}rounded-tr-none{% else %}rounded-tl-none{% endif %} shadow-sm space-y-2 text-slate-700 text-[15px] text-right">
+														<span>{{ message.message }}</span>
+														{% if message.files.count > 0 %}
+															{% for file in message.files.all %}
+																<a class="block bg-primary px-3 py-1.5 rounded-full space-x-2 space-x-reverse text-slate-300 text-[13px]" target="_blank" href="{{ file.file.url}}" title="{{ file.file_name}}">
+																	<span>{{ file.file_name|slice:20 }}</span>
+																	<svg class="inline" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" height="16" width="16">
+																		<path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd"></path>
+																	</svg>
+																</a>
+															{% endfor %}
+														{% endif %}
+													</p>
+													{% if not message.next_messages.count > 0 %}
+														<p class="text-slate-500 text-[13px] {% if request.user == message.user %}text-left{% else %}text-right{% endif %}">{{ message.date|date:"h:i A" }}</p>
+													{% endif %}
+												</div>
+												{% for next_message in message.next_messages %}
+													<div id="message-{{ next_message.id }}" class="space-y-2 w-fit">
+														<p class="{% if request.user == next_message.user %}bg-sky-100{% else %}bg-white{% endif %} leading-relaxed px-4 py-3 rounded-xl {% if request.user == message.user %}rounded-tr-none{% else %}rounded-tl-none{% endif %} shadow-sm space-y-2 text-slate-700 text-[15px] text-right">
+															<span>{{ next_message.message }}</span>
+															{% if next_message.files.count > 0 %}
+																{% for file in next_message.files.all %}
+																	<a class="block bg-primary px-3 py-1.5 rounded-full space-x-2 space-x-reverse text-slate-300 text-[13px]" target="_blank" href="{{ file.file.url}}" title="{{ file.file_name}}">
+																		<span>{{ file.file_name|slice:20 }}</span>
+																		<svg class="inline" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" height="16" width="16">
+																			<path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd"></path>
+																		</svg>
+																	</a>
+																{% endfor %}
+															{% endif %}
+														</p>
+														{% if not next_message.next_messages.count > 0 %}
+															<p class="text-slate-500 text-[13px] {% if request.user == message.user %}text-left{% else %}text-right{% endif %}">{{ next_message.date|date:"h:i A" }}</p>
+														{% endif %}
+													</div>
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+				</div>
+				{# Form section #}
+				{% if not ticket.status == 'مغلقة' %}
+					<div class="bg-slate-100 px-5 py-5 rounded-xl">
+						<form id="chat-form" class="flex items-center relative" enctype="multipart/form-data">
+							{% csrf_token %}
+							<input id="chat-message-input" type="text" class="appearance-none bg-white border border-slate-300 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 px-6 py-4 peer pr-14 rounded-full text-primary text-[15px] w-full" placeholder="إكتب رسالتك هنا ..." required/>
+							<div class="absolute flex h-full items-center justify-center text-slate-500 hover:text-primary w-16">
+								<input id="upload-file" up-switch=".target" type="checkbox" class="absolute cursor-pointer h-full opacity-0 w-16" />
+								<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" height="20" width="20">
+									<path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd"/>
+								</svg>
+							</div>
+							<button id="send-message" type="submit" class="absolute focus:outline-none inset-0 px-6 py-3 right-auto text-slate-500 hover:text-primary" title="ارسال">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="24" width="24">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+								</svg>
+							</button>
+						</form>
+
+						<div id="upload-message" class="text-red-500 text-[13px] mx-[5px] mt-2 hidden">انتظر حتي يتم رفع الملف</div>
+						<input id="file-input" type="file" class="filepond target mt-4" name="file" multiple data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3" accept="image/*, application/pdf, video/mp4" up-show-for=":checked" />
+					</div>
+				{% endif %}
+			</div>
+
+			{# Details section #}
+			<ul class="flex flex-col max-w-md mx-auto rounded-lg text-[15px] text-slate-700 w-full" data-aos="fade-up">
+				<li class="even:bg-slate-50 flex py-5 items-center justify-between odd:bg-slate-100 px-5 rounded-t-lg">
+					<span class="font-medium">المستخدم</span>
+					<span>
+						{% if ticket.user.type == '3' %}
+							{{ ticket.user.username }}
+						{% else %}
+							{{ ticket.user.get_short_name }}
+						{% endif %}
+					</span>
+				</li>
+				<li class="even:bg-slate-50 flex py-5 items-center justify-between odd:bg-slate-100 px-5">
+					<span class="font-medium">الحاله</span>
+					<div class="{% if ticket.status == 'مفتوحة' %}bg-green-600/10 text-green-800{% else %}bg-slate-600/10 text-slate-800{% endif %} inline-flex items-center px-4 py-1.5 rounded-full space-x-2 space-x-reverse">
+						<span class="bg-current h-2.5 rounded-full w-2.5"></span>
+						<span>{{ ticket.status }}</span>
+					</div>
+				</li>
+				<li class="even:bg-slate-50 flex py-5 items-center justify-between odd:bg-slate-100 px-5">
+					<span class="font-medium">طلب العميل</span>
+					<span>{{ ticket.problem_of_client|default_if_none:'-' }}</span>
+				</li>
+				<li class="even:bg-slate-50 flex py-5 items-center justify-between odd:bg-slate-100 px-5 {% if ticket.status != 'مغلقة' or request.user.type != '3' and request.user == ticket.user %}rounded-b-lg{% endif %}">
+					<span class="font-medium">تاريخ الانشاء</span>
+					<span>{{ ticket.date }}</span>
+				</li>
+				{% if ticket.status == 'مغلقة' %}
+					<li class="even:bg-slate-50 flex py-5 items-center justify-between odd:bg-slate-100 px-5 {% if request.user.type != '3' and request.user == ticket.user %}rounded-b-lg{% endif %}">
+						<span class="font-medium">تاريخ الاغلاق</span>
+						<span>{{ ticket.end_date }}</span>
+					</li>
+				{% else %}
+					<li class="even:bg-slate-50 flex py-5 items-center justify-between odd:bg-slate-100 px-5 rounded-b-lg">
+						<span class="font-medium">إجراءات</span>
+						<button type="button" data-section="section-close" class="flex hover:text-primary items-center justify-center" title="إغلاق">
+							<svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" fill="none" height="20" width="20" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+							</svg>
+						</button>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+
+	{{ ticket.id|json_script:"json-roomname" }}
+	{{ "help"|json_script:"json-roompath" }}
+{% endblock %}
+
+{% block extra_content %}
+	{% if ticket.need_help == False and request.user == ticket.user %}
+		{# Discussion bot modal #}
+		<div class="fixed flex items-end min-h-screen overflow-hidden sm:py-8 section-bot sm:items-center w-full z-20">
+			<div data-section="section-bot" class="backdrop-blur-sm bg-light/80 cursor-pointer fixed inset-0"></div>
+			<form id="problem-form" method="POST" class="bg-primary divide-light divide-y mx-auto rounded-t-[20px] shadow-2xl sm:max-w-md sm:rounded-xl text-slate-200 w-full z-30">
+				{% csrf_token %}
+				<div class="bg-primary flex items-center justify-between px-6 py-7 rounded-t-[20px]" style="position:inherit;">
+					<h3 class="font-medium leading-none text-[17px]">كيف نستطيع خدمتك</h3>
+					<button type="submit" class="focus:outline-none hover:text-slate-100">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="22" width="22">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+						</svg>
+					</button>
+				</div>
+				<div class="is-scroll max-h-[400px] overflow-y-auto px-6 py-7 space-y-6 w-full">
+					<fieldset class="grid grid-cols-1 space-y-4 w-full">
+						<select name="problem_0" class="appearance-none bg-primary border border-slate-600 disabled:bg-transparent disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-slate-200 form-select h-12 px-4 py-3 rounded-lg text-slate-100 text-[15px] w-full" up-switch=".level-0">
+							<option value="">اختر</option>
+							{% for problem in problems %}
+								{% if problem.nesting_level == 0 %}
+									<option value="{{ problem.id }}">{{ problem.name }}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+						{% for parent in parents %}
+							<select name="problem_{{ parent.nesting_level|add:" 1" }}" class="appearance-none bg-primary border border-slate-600 disabled:bg-transparent disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-slate-200 form-select h-12 px-4 py-3 rounded-lg text-slate-100 text-[15px] w-full level-{{ parent.nesting_level }} level-{{ parent.parent.nesting_level }} level-{{ parent.parent.parent.nesting_level }}" up-show-for="{{ parent.id }}" up-switch=".level-{{ parent.nesting_level|add:" 1" }}">
+								<option value="">اختر</option>
+								{% for problem in parent.nested_problem.all %}
+									<option value="{{ problem.id }}">{{ problem.name }}</option>
+								{% endfor %}
+							</select>
+						{% endfor %}
+					</fieldset>
+					{% for problem in problems %}
+						{% if problem.result %}
+							<div class="bg-slate-100 p-4 rounded-lg text-primary level-{{ problem.nesting_level }} level-{{ problem.parent.nesting_level }} level-{{ problem.parent.parent.nesting_level }} level-{{ problem.parent.parent.parent.nesting_level }}" up-show-for="{{ problem.id }}">
+								<div class="flex">
+									<svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" height="22" width="22" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+										<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+									</svg>
+									<p class="leading-relaxed pr-3 text-[15px] text-right">{{ problem.result|safe }}</p>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="bg-primary flex justify-center px-6 py-6 rounded-b-[20px]" style="position:inherit;">
+					<button type="submit" class="bg-secondary disabled:cursor-not-allowed flex focus:outline-none font-medium hover:bg-slate-100 items-center justify-center h-[50px] px-8 py-3 rounded-full shadow-sm submit text-sm text-primary w-full">محادثة الدعم</button>
+				</div>
+			</form>
+		</div>
+	{% endif %}
+
+	{# Close ticket modal #}
+	<div class="fixed hidden items-end min-h-screen overflow-hidden sm:py-8 section-close sm:items-center w-full z-20">
+		<div data-section="section-close" class="backdrop-blur-sm bg-light/80 cursor-pointer fixed inset-0"></div>
+		<form id="close-ticket" method="POST" class="bg-primary divide-light divide-y mx-auto rounded-t-[20px] shadow-2xl sm:max-w-sm sm:rounded-xl text-slate-200 w-full z-30">
+			{% csrf_token %}
+
+			<input name="status" hidden value="close"/>
+
+			<div class="bg-primary flex items-center justify-between px-6 py-7 rounded-t-[20px]" style="position:inherit;">
+				<h3 class="font-medium leading-none text-[17px]">اغلاق التذكره</h3>
+				<button type="button" data-section="section-close" class="focus:outline-none hover:text-slate-100">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" height="22" width="22">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+					</svg>
+				</button>
+			</div>
+			<div class="is-scroll max-h-[400px] overflow-y-auto px-6 py-7 w-full">
+				<div class="bg-slate-100 flex p-4 rounded-lg text-primary">
+					<svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" height="22" width="22" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+					</svg>
+					<span class="leading-relaxed pr-3 text-[15px]">انت على وشك إغلاق التذكرة الحالية</span>
+				</div>
+			</div>
+			<div class="bg-primary flex justify-center px-6 py-6 rounded-b-[20px]" style="position:inherit;">
+				<button type="submit" class="bg-secondary disabled:cursor-not-allowed flex focus:outline-none font-medium hover:bg-slate-100 items-center justify-center h-[50px] px-8 py-3 rounded-full shadow-sm submit text-sm text-primary w-full">تأكيد</button>
+			</div>
+		</form>
+	</div>
+{% endblock %}

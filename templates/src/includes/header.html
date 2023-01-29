@@ -1,0 +1,82 @@
+{#{% load market-tags %}#}
+{#{% vendor_domain request as vendor_with_domain  %}#}
+{#{% url 'home' as home_url %}#}
+
+<header class="bg-primary flex items-center mx-auto pt-6 w-full">
+    <div class="flex items-center justify-between max-w-[1440px] mx-auto md:px-8 px-4 w-full">
+        <a href="{{ home_url }}" title="{{ shop_settings.general_shop_settings.title }}">
+            <img src="{{ shop_settings.general_shop_settings.logo.url }}" class="aspect-square invert" height="58" width="58" alt="شعار منصة عبر" />
+        </a>
+        <nav id="innerSticky" class="flex items-center">
+            <ul class="font-medium hidden items-center lg:flex space-x-8 space-x-reverse text-slate-100 text-lg">
+                <li>
+                    <a href="{{ home_url }}" class="{% if request.path == home_url %}text-secondary{% else %}hover:text-secondary{% endif %}" title="الرئيسية">الرئيسية</a>
+                </li>
+                {% if request.user.type == "1" or request.user.type == "2" %}
+                    <li>
+{#                        {% url 'orders:orders' as orders_url %}#}
+                        <a href="{{ orders_url }}" class="{% if request.path == orders_url %}text-secondary{% else %}hover:text-secondary{% endif %}" title="الطلبات">الطلبات</a>
+                    </li>
+                {% endif %}
+                {% if not vendor_with_domain and request.user.type != "2" %}
+                    <li>
+                        <a href="{#{% url 'services:services' %}#}" class="{% if 'services' in request.path %}text-secondary{% else %}hover:text-secondary{% endif %}" title="المعبرون">المعبرون</a>
+                    </li>
+                {% endif %}
+                {% if request.user.type == "1" %}
+
+                    <li>
+                        <a href="{#{% url 'vendor:account_levels' %}#}" class="{% if 'account_levels' in request.path %}text-secondary{% else %}hover:text-secondary{% endif %}" title="كن معبرًا">كن معبرًا</a>
+                    </li>
+                {% else %}
+                    {% if user.vendor_profile.account_level.level and user.vendor_profile.account_level.level < 3 %}
+                        <li>
+                            <a href="{#{% url 'vendor:account_levels' %}#}" class="{% if 'account_levels' in request.path %}text-secondary{% else %}hover:text-secondary{% endif %}" title="{% if user.type == "1" %}كن معبرًا{% else %}{% if user.vendor_profile.account_level.level < 3 %}ترقية الباقة {% endif %}{% endif %}">{% if user.type == "1" %}كن معبرًا{% else %}{% if user.vendor_profile.account_level.level < 3 %}ترقية الباقة {% endif %}{% endif %}</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+                <li>
+                    <a href="{#{% url 'vendor:blog' %}#}" class="{% if 'blog' in request.path %}text-secondary{% else %}hover:text-secondary{% endif %}" title="المدونة">المدونة</a>
+                </li>
+                <li>
+                    <a href="{#{% url 'help:help-center' %}#}" class="{% if 'help-center' in request.path %}text-secondary{% else %}hover:text-secondary{% endif %}" title="مركز الدعم">مركز الدعم</a>
+                </li>
+            </ul>
+            {% if user.is_authenticated %}
+            <div class="flex items-center mr-8">
+                {% if request.user.type == "2" %}
+                <button data-section="section-add" class="hidden px-3 py-3 text-slate-100 hover:text-secondary focus:outline-none md:flex" aria-label="تطبيقات">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" width="27" height="27" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z"></path>
+                    </svg>
+                </button>
+                {% endif %}
+                <button id="notifications-button" data-section="section-notification" class="px-3 py-3 text-secondary hover:text-slate-100 focus:outline-none flex relative {% if user.unread_notifications.count > 0 %}notification-badge{% endif %}" aria-label="الإشعارات">
+                    {% if user.unread_notifications.count > 0 %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="27" height="27">
+                        <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span id="notification-badge" class="top-0 absolute bg-red-600 flex font-bold items-center justify-center leading-none left-6 min-h-[20px] min-w-[20px] p-1 rounded-full text-slate-100 text-xs">{{ request.user.unread_notifications.count }}</span>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" height="27" width="27" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M10.5 8.25h3l-3 4.5h3"></path>
+                    </svg>
+                    {% endif %}
+                </button>
+                <button class="toggle-drawer -ml-3 px-3 py-3 text-secondary hover:text-slate-100 focus:outline-none" aria-label="القائمة الجانبية">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" width="40" height="40">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"></path>
+                    </svg>
+                </button>
+            </div>
+            {% else %}
+            <button class="toggle-drawer -ml-3 px-3 py-3 text-secondary hover:text-slate-100 focus:outline-none lg:hidden" aria-label="القائمة الجانبية">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" width="40" height="40">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"></path>
+                </svg>
+            </button>
+            <a href="{% url 'account_login' %}" class="bg-secondary font-medium hidden hover:bg-slate-100 leading-none lg:flex px-6 py-3 mr-8 rounded-full text-sm text-primary">التسجيل</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

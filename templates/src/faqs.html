@@ -1,0 +1,45 @@
+{% extends 'src/layout.html' %}
+
+{% load static %}
+
+{% block title %}الأسئلة الشائعة - {{ block.super }}{% endblock %}
+
+{% block content %}
+    {# Hero sections #}
+    <section class="bg-primary lg:p-8 lg:pb-16">
+        <div class="max-w-[1440px] mx-auto lg:border-2 border-secondary flex flex-col items-center md:px-8 px-6 py-16 rounded-xl space-y-6 text-center w-full">
+            <h1 class="font-medium leading-relaxed px-2 text-2xl text-secondary" data-aos="fade-down">الأسئلة الشائعة</h1>
+            <h2 class="max-w-prose space-x-2 space-x-reverse text-slate-300" data-aos="fade-up">
+                <a href="{#{% url 'home' %}#}" class="text-slate-100">الرئيسيه</a>
+                <span>&rsaquo;</span>
+                <span>الأسئلة الشائعة</span>
+            </h2>
+        </div>
+    </section>
+
+    <div class="max-w-[1440px] mx-auto bg-white flex flex-col items-center justify-center md:px-8 px-6 py-16 md:py-24 w-full">
+        <div class="max-w-prose grid grid-cols-1 gap-8 w-full">
+            <article class="bg-primary rounded-xl shadow-card relative" data-aos="fade-up">
+                <div class="border-2 border-secondary rounded-xl px-4 py-4 m-4 space-y-4">
+                    <p class="font-medium text-secondary text-3xl" style="-webkit-text-stroke-width: 1.5px; -webkit-text-stroke-color: #FFF2C1;">1</p>
+                    <h3 class="font-medium leading-relaxed text-lg text-secondary">سجل بالطريقة المناسبة لك</h3>
+                    <p class="leading-relaxed text-slate-100">أختر وسيلة التسجيل الأكثر ملائمة لك وكن على تواصل دائم</p>
+                </div>
+            </article>
+            <article class="bg-primary rounded-xl shadow-card relative" data-aos="fade-up">
+                <div class="border-2 border-secondary rounded-xl px-4 py-4 m-4 space-y-4">
+                    <p class="font-medium text-secondary text-3xl" style="-webkit-text-stroke-width: 1.5px; -webkit-text-stroke-color: #FFF2C1;">2</p>
+                    <h3 class="font-medium leading-relaxed text-lg text-secondary">سجل بالطريقة المناسبة لك</h3>
+                    <p class="leading-relaxed text-slate-100">أختر وسيلة التسجيل الأكثر ملائمة لك وكن على تواصل دائم</p>
+                </div>
+            </article>
+            <article class="bg-primary rounded-xl shadow-card relative" data-aos="fade-up">
+                <div class="border-2 border-secondary rounded-xl px-4 py-4 m-4 space-y-4">
+                    <p class="font-medium text-secondary text-3xl" style="-webkit-text-stroke-width: 1.5px; -webkit-text-stroke-color: #FFF2C1;">3</p>
+                    <h3 class="font-medium leading-relaxed text-lg text-secondary">سجل بالطريقة المناسبة لك</h3>
+                    <p class="leading-relaxed text-slate-100">أختر وسيلة التسجيل الأكثر ملائمة لك وكن على تواصل دائم</p>
+                </div>
+            </article>
+        </div>
+    </div>
+{% endblock %}

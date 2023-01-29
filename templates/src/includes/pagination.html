@@ -1,0 +1,12 @@
+{% if paginator.num_pages > 1 %}
+    <div class="flex items-center justify-between pt-6 w-full">
+        <div class="flex items-center paginator">
+            <a href="{% if objects.has_previous %}?page={{ objects.previous_page_number }}{% else %}#{% endif %}" class="bg-slate-100 border focus:outline-none font-medium hover:bg-slate-200 hover:text-primary px-4 py-3 rounded-r-lg text-slate-600 text-sm">السابق</a>
+            <a href="{% if objects.has_next %}?page={{ objects.next_page_number }}{% else %}#{% endif %}" class="bg-slate-100 border focus:outline-none font-medium hover:bg-slate-200 hover:text-primary px-4 py-3 rounded-l-lg text-slate-600 text-sm">التالي</a>
+        </div>
+        <div class="font-medium text-slate-600 text-sm">
+            عرض {{ objects.start_index }} إلى {{ objects.end_index }}من {{ paginator.count }} نتيجة
+        </div>
+    </div>
+{% endif %}
+

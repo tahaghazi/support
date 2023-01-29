@@ -1,0 +1,142 @@
+{% load static %}
+{#{% load market-tags %}#}
+{##}
+{#{% vendor_domain request as vendor_with_domain %}#}
+
+<footer id="footer" class="bg-primary">
+    <div class="max-w-[1440px] mx-auto lg:p-8 lg:pt-16">
+        <div class="gap-10 grid grid-cols-2 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xl:grid-cols-6 lg:border-2 border-secondary rounded-xl px-6 md:px-8 py-16">
+            {# Abber Info #}
+            <div class="col-span-full lg:col-span-2">
+                <div class="flex flex-col items-center lg:items-start space-y-6">
+                    <a href="{#{% url 'home' %}#}" title="{{ shop_settings.general_shop_settings.title }}">
+                        <img src="{{ shop_settings.general_shop_settings.logo.url }}" class="aspect-square invert" height="72" width="72" alt="{{ shop_settings.general_shop_settings.title }}" data-aos="fade-up" />
+                    </a>
+                    <p class="leading-relaxed lg:text-right text-center text-xl text-secondary pt-2" data-aos="fade-left">
+                        {% if vendor_with_domain %}
+                            {{ vendor_with_domain.vendor_profile.about }}
+                        {% else %}
+                            عبر - منصة عربية لتفسير و تعبير الأحلام وفق منهج أهل السنة والجماعة
+                        {% endif %}
+                    </p>
+                    <div class="flex items-center space-x-8 space-x-reverse text-secondary pt-2" data-aos="fade-up">
+                        <a {% if vendor_with_domain %}{% if vendor_with_domain.facebook %}href="{{ vendor_with_domain.facebook }}"{% else %}hidden{% endif %}{% else %}{% if shop_settings.general_shop_settings.facebook %}href="{{ shop_settings.general_shop_settings.facebook }}"{% else %}hidden{% endif %}{% endif %} target="_blank" rel="noreferrer" class="hover:text-slate-100" title="فيسبوك">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="26" width="26" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M480 257.35c0-123.7-100.3-224-224-224s-224 100.3-224 224c0 111.8 81.9 204.47 189 221.29V322.12h-56.89v-64.77H221V208c0-56.13 33.45-87.16 84.61-87.16 24.51 0 50.15 4.38 50.15 4.38v55.13H327.5c-27.81 0-36.51 17.26-36.51 35v42h62.12l-9.92 64.77H291v156.54c107.1-16.81 189-109.48 189-221.31z"></path>
+                            </svg>
+                        </a>
+                        <a {% if vendor_with_domain %}{% if vendor_with_domain.twitter %}href="{{ vendor_with_domain.twitter }}"{% else %}hidden{% endif %}{% else %}{% if shop_settings.general_shop_settings.twitter %}href="{{ shop_settings.general_shop_settings.twitter }}"{% else %}hidden{% endif %}{% endif %} target="_blank" rel="noreferrer" class="hover:text-slate-100" title="تويتر">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="26" width="26" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M496 109.5a201.8 201.8 0 01-56.55 15.3 97.51 97.51 0 0043.33-53.6 197.74 197.74 0 01-62.56 23.5A99.14 99.14 0 00348.31 64c-54.42 0-98.46 43.4-98.46 96.9a93.21 93.21 0 002.54 22.1 280.7 280.7 0 01-203-101.3A95.69 95.69 0 0036 130.4c0 33.6 17.53 63.3 44 80.7A97.5 97.5 0 0135.22 199v1.2c0 47 34 86.1 79 95a100.76 100.76 0 01-25.94 3.4 94.38 94.38 0 01-18.51-1.8c12.51 38.5 48.92 66.5 92.05 67.3A199.59 199.59 0 0139.5 405.6a203 203 0 01-23.5-1.4A278.68 278.68 0 00166.74 448c181.36 0 280.44-147.7 280.44-275.8 0-4.2-.11-8.4-.31-12.5A198.48 198.48 0 00496 109.5z"></path>
+                            </svg>
+                        </a>
+                        <a {% if vendor_with_domain %}{% if vendor_with_domain.snapchat %}href="{{ vendor_with_domain.snapchat }}"{% else %}hidden{% endif %}{% else %}{% if shop_settings.general_shop_settings.snapchat %}href="{{ shop_settings.general_shop_settings.snapchat }}"{% else %}hidden{% endif %}{% endif %} target="_blank" rel="noreferrer" class="hover:text-slate-100" title="يوتيوب">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="25" height="25" viewBox="0 0 24 24">
+                                <path d="M5.829 4.533c-.6 1.344-.363 3.752-.267 5.436-.648.359-1.48-.271-1.951-.271-.49 0-1.075.322-1.167.802-.066.346.089.85 1.201 1.289.43.17 1.453.37 1.69.928.333.784-1.71 4.403-4.918 4.931-.251.041-.43.265-.416.519.056.975 2.242 1.357 3.211 1.507.099.134.179.7.306 1.131.057.193.204.424.582.424.493 0 1.312-.38 2.738-.144 1.398.233 2.712 2.215 5.235 2.215 2.345 0 3.744-1.991 5.09-2.215.779-.129 1.448-.088 2.196.058.515.101.977.157 1.124-.349.129-.437.208-.992.305-1.123.96-.149 3.156-.53 3.211-1.505.014-.254-.165-.477-.416-.519-3.154-.52-5.259-4.128-4.918-4.931.236-.557 1.252-.755 1.69-.928.814-.321 1.222-.716 1.213-1.173-.011-.585-.715-.934-1.233-.934-.527 0-1.284.624-1.897.286.096-1.698.332-4.095-.267-5.438-1.135-2.543-3.66-3.829-6.184-3.829-2.508 0-5.014 1.268-6.158 3.833z" fill="currentColor" />
+                            </svg>
+                        </a>
+                        <a {% if vendor_with_domain %}{% if vendor_with_domain.instagram %}href="{{ vendor_with_domain.instagram }}"{% else %}hidden{% endif %}{% else %}{% if shop_settings.general_shop_settings.instagram %}href="{{ shop_settings.general_shop_settings.instagram }}"{% else %}hidden{% endif %}{% endif %} target="_blank" rel="noreferrer" class="hover:text-slate-100" title="إنستغرام">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="25" width="25" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M349.33 69.33a93.62 93.62 0 0193.34 93.34v186.66a93.62 93.62 0 01-93.34 93.34H162.67a93.62 93.62 0 01-93.34-93.34V162.67a93.62 93.62 0 0193.34-93.34h186.66m0-37.33H162.67C90.8 32 32 90.8 32 162.67v186.66C32 421.2 90.8 480 162.67 480h186.66C421.2 480 480 421.2 480 349.33V162.67C480 90.8 421.2 32 349.33 32z"></path><path d="M377.33 162.67a28 28 0 1128-28 27.94 27.94 0 01-28 28zM256 181.33A74.67 74.67 0 11181.33 256 74.75 74.75 0 01256 181.33m0-37.33a112 112 0 10112 112 112 112 0 00-112-112z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="flex items-center lg:hidden pt-6 space-x-8 space-x-reverse text-slate-100" data-aos="fade-up">
+                        <a href="{#{% url 'vendor_agreement' %}#}" class="hover:text-secondary" title="سياسة الخصوصية">سياسة الخصوصية</a>
+                        <a href="{#{% url 'terms' %}#}" class="hover:text-secondary" title="الشروط والأحكام">الشروط والأحكام</a>
+                    </div>
+                </div>
+            </div>
+            {# Important Links #}
+            <div class="hidden lg:block space-y-6">
+                <h3 class="font-medium text-[17px] text-secondary" data-aos="fade-up">روابط مهمة</h3>
+                <ul class="flex flex-col space-y-6 text-slate-100">
+                    {% if not vendor_with_domain %}
+                        <li data-aos="fade-up">
+                            <a href="{#{% url 'services:services' %}?search={{ query }}&get_all=vendors&order_by=rate#}" class="hover:text-secondary" title="المعبرون">المعبرون</a>
+                        </li>
+                    {% endif %}
+                    {% if user.vendor_profile.account_level.level == 2 %}
+                        <li data-aos="fade-up">
+                            <a href="{#{% url 'vendor:account_levels' %}#}" class="hover:text-secondary" title="الباقات">الباقات</a>
+                        </li>
+                    {% endif %}
+                    <li data-aos="fade-up">
+                        <a href="{#{% url 'vendor:blog' %}?search=#}" class="hover:text-secondary" title="المدونة">المدونة</a>
+                    </li>
+                </ul>
+            </div>
+            {# About #}
+            <div class="hidden lg:block space-y-6">
+                <h3 class="font-medium text-[17px] text-secondary" data-aos="fade-up">عن الموقع</h3>
+                <ul class="flex flex-col space-y-6 text-slate-100">
+                    <li data-aos="fade-up">
+                        <a href="/" class="hover:text-secondary" title="من نحن">من نحن</a>
+                    </li>
+                    <li data-aos="fade-up">
+                        <a href="{#{% url 'faqs' %}#}" class="hover:text-secondary" title="الأسئلة الشائعة">الأسئلة الشائعة</a>
+                    </li>
+                    <li data-aos="fade-up">
+                        <a href="{#{% url 'sitemap' %}#}" target="_blank" class="hover:text-secondary" title="خريطة الموقع">خريطة الموقع</a>
+                    </li>
+                </ul>
+            </div>
+            {# Other Information #}
+            <div class="hidden lg:block space-y-6">
+                <h3 class="font-medium text-[17px] text-secondary" data-aos="fade-up">معلومات أخرى</h3>
+                <ul class="flex flex-col space-y-6 text-slate-100">
+                    <li data-aos="fade-up">
+                        <a href="{#{% url 'vendor_agreement' %}#}" class="hover:text-secondary" title="إتفاقية المستخدم">إتفاقية المستخدم</a>
+                    </li>
+                    <li data-aos="fade-up">
+                        <a href="{#{% url 'terms' %}#}" class="hover:text-secondary" title="الشروط والأحكام">الشروط والأحكام</a>
+                    </li>
+                    <li data-aos="fade-up">
+                        <a href="{#{% url 'help:help-center' %}#}" class="hover:text-secondary" title="مركز الدعم">مركز الدعم</a>
+                    </li>
+                </ul>
+            </div>
+            {# Contact Us #}
+            <div class="hidden lg:block space-y-6">
+                <h3 class="font-medium text-[17px] text-secondary" data-aos="fade-up">إتصل بنا</h3>
+                <ul class="flex flex-col space-y-6 text-slate-100">
+                    <li data-aos="fade-up">
+                        {% if vendor_with_domain %}{{ vendor_with_domain.vendor_profile.address }}{% else %}{{ shop_settings.general_shop_settings.address }}{% endif %}</li>
+                    <li data-aos="fade-up">
+                        <a href="mailto:{% if vendor_with_domain %}{{ vendor_with_domain.email }}{% else %}{{ shop_settings.general_shop_settings.email }}{% endif %}" class="hover:text-secondary" title="{% if vendor_with_domain %}{{ vendor_with_domain.email }}{% else %}{{ shop_settings.general_shop_settings.email }}{% endif %}">{% if vendor_with_domain %}{{ vendor_with_domain.email }}{% else %}{{ shop_settings.general_shop_settings.email }}{% endif %}</a>
+                    </li>
+                    <li data-aos="fade-up">
+                        <a href="tel:{% if vendor_with_domain %}{{ vendor_with_domain.phone }}{% else %}{{ shop_settings.general_shop_settings.phone }}{% endif %}" class="hover:text-secondary truncate" title="هاتف:{% if vendor_with_domain %}{{ vendor_with_domain.phone }}{% else %}{{ shop_settings.general_shop_settings.phone }}{% endif %}">هاتف:
+                            {% if vendor_with_domain %}{{ vendor_with_domain.phone }}{% else %}{{ shop_settings.general_shop_settings.phone }}{% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="max-w-[1440px] border-t border-light lg:border-none pt-6 lg:pt-0 flex justify-center mx-auto md:justify-between md:pb-6 md:px-8 pb-24 px-6">
+        {# Copyright #}
+        <p class="flex items-center leading-relaxed space-x-2 space-x-reverse text-slate-100" data-aos="zoom-in">
+            <span>حقوق الطبع و النشر © {% now "Y" %} </span>
+            <a href="{#{% url 'home' %}#}" class="font-medium text-secondary" title="{{ shop_settings.general_shop_settings.title }}">
+                {% if vendor_with_domain %}{{ vendor_with_domain.get_full_name }}{% else %}{{ shop_settings.general_shop_settings.title }}{% endif %}.
+            </a>
+            <span class="hidden lg:flex">جميع الحقوق محفوظة</span>
+        </p>
+        {# Payments Images #}
+        <ul class="hidden items-center md:flex space-x-8 space-x-reverse" data-aos="zoom-in">
+            <li>
+                <img data-src="{% static 'src/img/payments/mastercard.webp' %}" class="lazyload" alt="Master Card" height="20" width="36" />
+            </li>
+            <li>
+                <img data-src="{% static 'src/img/payments/visa.webp' %}" class="lazyload" alt="Visa" height="20" width="45" />
+            </li>
+            <li>
+                <img data-src="{% static 'src/img/payments/mada.png' %}" class="lazyload" alt="Mada Card" height="20" width="48" />
+            </li>
+            <li>
+                <img data-src="{% static 'src/img/payments/stc_pay.webp' %}" class="lazyload" alt="STC" height="20" width="56" />
+            </li>
+        </ul>
+    </div>
+</footer>

@@ -1,0 +1,57 @@
+{% load widget_tweaks %}
+
+{% for field in form %}
+    {% if not  field in form.hidden_fields %}
+        {% if field.widget_type == 'checkbox' %}
+            <div class="flex items-center justify-between text-primary pt-1" data-aos="fade-up">
+                <div class="flex items-center">
+                    {% render_field field class="appearance-none bg-transparent border border-slate-300 flex-shrink-0 h-5 rounded text-primary w-5" %}
+                    <label for="id_{{ field.name }}" class="font-medium pr-3 space-x-2 space-x-reverse">{{ field.label }}</label>
+                </div>
+                {% if login_page %}
+                    <a href="{% url 'account_reset_password' %}">نسيت كلمة المرور؟</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="space-y-2 relative" data-aos="fade-up">
+                {% if field.errors %}
+                    <label for="id_{{ field.name }}" class="font-medium text-red-600">{{ field.label }}</label>
+                    {% if field.widget_type == 'select' %}
+                        {% render_field field class="appearance-none bg-red-800/10 border border-red-600 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 form-select h-[50px] px-4 py-1.5 rounded-lg text-red-800 text-[15px] w-full" %}
+                    {% elif field.widget_type == 'selectmultiple' %}
+                        {% render_field field class="appearance-none bg-red-800/10 border border-red-600 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 px-4 py-3 rounded-lg space-y-2 text-red-800 text-[15px] w-full" %}
+                    {% elif field.widget_type == 'password' %}
+                        {% render_field field class="appearance-none bg-red-800/10 border border-red-600 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 h-[50px] password placeholder:text-red-800 px-4 py-1.5 rounded-lg text-red-800 text-[15px] w-full" %}
+                        <button type="button" class="absolute items-center justify-center hover:text-primary left-0 py-4 px-4 h-[50px] text-red-800 text-xs toggle-password" title="اظهار/اخفاء كلمة المرور">إظهار</button>
+                    {% else %}
+                        {% render_field field class="appearance-none bg-red-800/10 border border-red-600 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 h-[50px] placeholder:text-red-800 px-4 py-1.5 rounded-lg text-red-800 text-[15px] w-full" %}
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <div class="text-red-600 text-[13px]">{{ error }}</div>
+                    {% endfor %}
+                {% else %}
+                    <label for="id_{{ field.name }}" class="font-medium text-slate-700">{{ field.label }} {% if not '?' in field.laabel %}:{% endif %}</label>
+                    {% if field.widget_type == 'select' %}
+                        {% render_field field class="appearance-none bg-transparent border border-slate-300 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 form-select h-[50px] px-4 py-1.5 rounded-lg text-primary text-[15px] w-full" %}
+                    {% elif field.widget_type == 'textarea' %}
+                        {% render_field field rows="10" class="appearance-none bg-transparent border border-slate-300 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 px-4 py-3 rounded-lg text-primary text-[15px] w-full" %}
+                    {% elif field.widget_type == 'selectmultiple' %}
+                        {% render_field field class="appearance-none bg-transparent border border-slate-300 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 px-4 py-3 rounded-lg space-y-2 text-primary text-[15px] w-full" %}
+                    {% elif field.widget_type == 'ckeditor' %}
+                        {% render_field field  %}
+                    {% elif field.widget_type == 'password' %}
+                        {% render_field field class="appearance-none bg-transparent border border-slate-300 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 h-[50px] password px-4 py-1.5 rounded-lg text-primary text-[15px] w-full" %}
+                        <button type="button" class="absolute items-center justify-center hover:text-primary left-0 py-4 px-4 h-[50px] text-slate-500 text-xs toggle-password" title="اظهار/اخفاء كلمة المرور">إظهار</button>
+                    {% else %}
+                        {% render_field field class="appearance-none bg-transparent border border-slate-300 disabled:bg-slate-50 disabled:cursor-not-allowed focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 h-[50px] px-4 py-1.5 rounded-lg text-primary text-[15px] w-full" %}
+                    {% endif %}
+                {% endif %}
+
+                {% if field.help_text %}
+                    <div class="text-slate-600 text-[13px]">{{ field.help_text|safe }}</div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endfor %}

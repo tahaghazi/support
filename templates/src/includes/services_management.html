@@ -1,0 +1,11 @@
+{#{% url 'services:coupons' as coupons %}#}
+{#{% url 'services:create_offer' as create_offer %}#}
+{#{% url 'vendor:vendor_service' as vendor_service %}#}
+
+<div class="flex items-center justify-center w-full">
+    <div class="bg-light flex items-center p-1 rounded-lg space-x-2 space-x-reverse tabs-header" data-aos="fade-up">
+        <a href="{{ vendor_service }}" class="{% if request.path == vendor_service %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">الخدمة</a>
+        <a href="{{ create_offer }}" class="{% if request.path == create_offer %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">الخصم</a>
+        <a href="{{ coupons }}" class="{% if request.path == coupons %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">الكوبونات</a>
+    </div>
+</div>

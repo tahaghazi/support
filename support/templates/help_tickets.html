@@ -1,0 +1,131 @@
+{% extends "src/profile_base.html" %}
+
+{% load static %}
+
+{% block profile %}
+    <div class="flex mx-auto space-y-4 flex-col items-center text-center w-full">
+        <div class="flex items-center max-w-md space-x-3 space-x-reverse w-full" data-aos="fade-up">
+            <div class="flex items-center w-full">
+                <form id="search-tickets" method="GET" class="w-full" up-autosubmit up-delay="1000" up-history="false" up-scroll="false">
+                    <input {% if request.GET.search or request.GET.search == '' %}autofocus onfocus="this.setSelectionRange(this.value.length,this.value.length);"{% endif %} name="search" value="{{ request.GET.search }}" class="appearance-none bg-white border border-slate-300 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 h-[50px] px-4 py-1.5 rounded-lg text-primary text-[15px] w-full" placeholder="ابحث عن دعم فني ..." maxlength="100" required />
+                </form>
+                <button type="button" data-section="section-filter" class="h-[50px] hover:text-primary px-4 py-1.5 -mr-[54px] text-slate-600" title="تصفية">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" height="22" width="22" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
+                    </svg>
+                </button>
+            </div>
+            <a href="{#{% url 'help:create-help' %}#}" class="appearance-none bg-white border border-slate-300 flex items-center focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-600 h-[50px] px-4 py-1.5 rounded-lg text-[15px] hover:text-primary text-slate-600" title="فتح تذكرة دعم">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="22" height="22" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z"></path>
+                </svg>
+            </a>
+        </div>
+
+        {% if tickets %}
+            <div class="pt-6 overflow-x-auto overflow-y-hidden w-full">
+                <table class="border-t divide-y text-slate-700 text-right w-full" data-aos="fade-up">
+                    <thead class="bg-slate-50 text-[15px]">
+                    <tr>
+                        <th scope="col" class="font-medium px-4 py-3 whitespace-nowrap">التذكره</th>
+                        <th scope="col" class="font-medium px-4 py-3 whitespace-nowrap">حالة التذكره</th>
+                        <th scope="col" class="font-medium px-4 py-3 whitespace-nowrap">المشكلة</th>
+                        <th scope="col" class="font-medium px-4 py-3 whitespace-nowrap">تاريخ فتح التذكره</th>
+                        <th scope="col" class="font-medium px-4 py-3 whitespace-nowrap">تاريخ اغلاق التذكره</th>
+                        <th scope="col" class="font-medium px-4 py-3 text-center whitespace-nowrap">إجراءات</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ticket in tickets %}
+                        <tr class="even:bg-slate-50">
+                            <td class="px-4 py-4 whitespace-nowrap">{{ ticket.id|slice:8 }}</td>
+                            <td class="px-4 py-4 text-[15px] whitespace-nowrap">
+                                <div
+                                    class="{% if ticket.status == 'مفتوحة' %}bg-green-600/10 text-green-800{% else %}bg-slate-600/10 text-slate-800{% endif %} inline-flex items-center px-4 py-1.5 rounded-full space-x-2 space-x-reverse">
+                                    <span class="bg-current h-2.5 rounded-full w-2.5"></span>
+                                    <span>{{ ticket.status }}</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ ticket.problem_of_client.name|default_if_none:'-' }}</td>
+
+                            <td class="px-4 py-4 whitespace-nowrap">{{ ticket.date }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                {% if ticket.status == 'مغلقة' %}{{ ticket.end_date }}{% else %}-{% endif %}</td>
+                            <td class="px-4 py-4 relative">
+                                <a href="{#{% url 'help:help' ticket.id %}#}"
+                                   class="flex items-center justify-center hover:text-primary" title="عرض">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" fill="none"
+                                         height="20" width="20" viewBox="0 0 24 24" stroke-width="1.5"
+                                         stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot><tr><td></td></tr></tfoot>
+                </table>
+            </div>
+        {% else %}
+            <div class="flex flex-col items-center justify-center max-w-md space-y-3 pt-8 w-full">
+                <img data-src="{% static 'src/img/empty.svg' %}" height="146" width="146"
+                     class="aspect-square lazyload -mb-0.5" alt="لا توجد بيانات" data-aos="fade-up"/>
+                <h3 class="font-medium text-xl text-primary" data-aos="fade-up">لا توجد بيانات</h3>
+                <p class="text-slate-700" data-aos="fade-up">عذرا ، لا توجد بيانات لعرضها</p>
+                <p data-aos="fade-up">
+                    <a href="{#{% url 'help:create-help' %}#}?action=create"
+                       class="bg-primary flex font-medium hover:bg-light items-center justify-center h-[50px] mt-4 px-6 py-1.5 rounded-full shadow-sm space-x-2 space-x-reverse text-slate-100 text-sm w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" class="flex-shrink-0" fill="none"
+                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/>
+                        </svg>
+                        <span>فتح تذكرة دعم فني</span>
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+        {% include 'src/includes/pagination.html' with paginator=paginator objects=page_obj %}
+    </div>
+{% endblock %}
+
+{% block extra_content %}
+    {# Filters modal #}
+    <div class="fixed hidden items-end min-h-screen overflow-hidden sm:py-8 section-filter sm:items-center w-full z-20">
+        <div data-section="section-filter" class="backdrop-blur-sm bg-light/80 cursor-pointer fixed inset-0"></div>
+        <form id="filter-tickets"
+              class="bg-primary divide-light divide-y mx-auto rounded-t-[20px] shadow-2xl sm:max-w-sm sm:rounded-xl text-slate-200 w-full z-30">
+            <div class="bg-primary flex items-center justify-between px-6 py-7 rounded-t-[20px]"
+                 style="position:inherit;">
+                <h3 class="font-medium leading-none text-[17px]">تصفية</h3>
+                <button type="button" data-section="section-filter" class="focus:outline-none hover:text-slate-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" height="22" width="22">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="is-scroll max-h-[400px] overflow-y-auto px-6 py-7 w-full">
+                <fieldset class="space-y-2">
+                    <label for="status" class="font-medium">حسب حالة الفاتورة:</label>
+                    <select id="status" name="status"
+                            class="appearance-none bg-primary border border-slate-600 disabled:bg-transparent disabled:cursor-not-allowed focus:outline-none focus:ring-1 focus:ring-slate-200 form-select h-12 px-4 py-3 rounded-lg text-slate-100 text-[15px] w-full">
+                        <option value="" {% if not request.GET.status %} selected{% endif %}>الكل</option>
+                        <option value="مفتوحة"{% if request.GET.status == 'مفتوحة' %} selected{% endif %}>مفتوحة
+                        </option>
+                        <option value="مغلقة"{% if request.GET.status == 'مغلقة' %} selected{% endif %}>مغلقة</option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="bg-primary flex justify-center px-6 py-6 rounded-b-[20px]" style="position:inherit;">
+                <button type="submit"
+                        class="bg-secondary disabled:cursor-not-allowed flex focus:outline-none font-medium hover:bg-slate-100 items-center justify-center h-[50px] px-8 py-3 rounded-full shadow-sm submit text-sm text-primary w-full">
+                    تصفية
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

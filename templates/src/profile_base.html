@@ -1,0 +1,72 @@
+{% extends 'src/layout.html' %}
+
+{% block title %}{{ title }} - الحساب - {{ block.super }}{% endblock %}
+
+{% block content %}
+{#    {% url 'vendor:profile' as profile_url %}#}
+{#    {% url 'orders:vendor_analytics' as vendor_analytics_url %}#}
+{#    {% url 'vendor:account_level' as account_level_url %}#}
+{#    {% url 'transactions:user-transactions' as transactions_url %}#}
+{#    {% url 'my_cards' as cards_url %}#}
+{#    {% url 'vendor:vendor_service' as vendor_service %}#}
+{#    {% url 'help:help-center' as help_center_url %}#}
+{#    {% url 'vendor:wishlist' 'view' None None as wishlist_url %}#}
+{#    {% url 'vendor:my_posts' as my_posts_url %}#}
+{#    {% url 'vendor:vendor_edit' as vendor_edit %}#}
+{#    {% url 'services:coupons' as services_coupons %}#}
+{#    {% url 'services:create_offer' as create_offer %}#}
+{#    {% url 'vendor:vendor_service' as vendor_service %}#}
+
+    {# Hero sections #}
+    <section class="bg-primary lg:p-8 lg:pb-16">
+        <div class="max-w-[1440px] mx-auto lg:border-2 border-secondary flex flex-col items-center md:px-8 px-6 py-16 rounded-xl text-center w-full   ">
+            {% if request.path == profile_url or request.path == vendor_edit  or request.path == account_level_url %}
+                <div class="relative inline-block" data-aos="zoom-in">
+                    <img id="imagePreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTk4IiBoZWlnaHQ9IjE5OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4=" data-src="{{ user.image.url }}" class="aspect-square bg-secondary h-[7.5rem] lazyload mx-auto object-cover rounded-full w-[7.5rem] z-[6]" alt="الصورة الشخصية" />
+                    <label for="id_image" class="absolute bg-secondary border-[3px] border-secondary bottom-[5px] cursor-pointer flex focus:outline-none right-[18px] rounded-full shadow-sm text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                        </svg>
+                    </label>
+                </div>
+            {% endif %}
+            <h1 class="font-medium leading-relaxed {% if request.path == profile_url or request.path == vendor_edit %}pt-8{% endif %} px-2 text-2xl text-secondary" data-aos="fade-up">{{ title }}</h1>
+            <h2 class="max-w-prose pt-6 space-x-2 space-x-reverse text-slate-300" data-aos="fade-up">
+                <a href="{#{% url 'home' %}#}" class="text-slate-100">الرئيسيه</a>
+                <span>&rsaquo;</span>
+                <a href="{{ profile_url }}" class="text-slate-100">الحساب</a>
+                <span>&rsaquo;</span>
+                <span>{{ title }}</span>
+            </h2>
+            <div class="bg-light flex items-center p-1 mt-8 rounded-lg tabs-header overflow-x-auto space-x-2 space-x-reverse {% if request.user.type == "2" %}w-full{% endif %} sm:w-auto" data-aos="fade-up">
+                {% if request.path == transactions_url or request.path == cards_url %}
+                    <a href="{{ transactions_url }}" class="{% if request.path == transactions_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">العمليات المالية</a>
+                    <a href="{{ cards_url }}" class="{% if request.path == cards_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">البطاقات الإئتمانية</a>
+                {% else %}
+                    <a href="{{ profile_url }}" class="{% if request.path == profile_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px]" up-scroll="false">الحساب</a>
+
+                    {% if request.user.type == "2" %}
+                        <a href="{{ vendor_edit }}" class="{% if request.path == vendor_edit or request.path == account_level_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px]" up-scroll="false">حساب المعبر</a>
+
+                        <a href="{{ vendor_service }}" class="{% if request.path == vendor_service  or request.path == services_coupons or request.path == create_offer %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px]" up-scroll="false">ادارة الخدمات</a>
+
+                        {% if request.user.vendor_profile.vendor_analytics %}
+                            <a href="{{ vendor_analytics_url }}" class="{% if request.path == vendor_analytics_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px]" up-scroll="false">إحصائيات</a>
+                        {% endif %}
+
+                        <a href="{{ my_posts_url }}" class="{% if request.path == my_posts_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">المقالات</a>
+                    {% else %}
+                        <a href="{{ wishlist_url }}" class="{% if 'wishlist' in request.path %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">العناصر المحفوظة</a>
+                    {% endif %}
+
+                    <a href="{{ help_center_url }}" class="{% if request.path == help_center_url %}bg-secondary default-tab rounded-lg shadow-sm text-primary{% else %} text-slate-100 {% endif %} focus:outline-none px-4 py-3 font-medium text-[13px] whitespace-nowrap" up-scroll="false">مركز الدعم</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-[1440px] mx-auto bg-white flex flex-col items-center justify-center md:px-8 px-6 py-16 md:py-24 w-full">
+        {% block profile %}{% endblock %}
+    </div>
+{% endblock %}
